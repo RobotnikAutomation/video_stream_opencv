@@ -242,7 +242,7 @@ virtual void subscribe() {
     
     if(!cap->isOpened() && video_stream_provider_type == "rtsp_stream")
     {
-      int maxAttempts = 20; // Set the maximum number of attempts
+      int maxAttempts = 20;
       int attempts = 0;
       bool isOpened = false;
       do 
