@@ -239,6 +239,25 @@ virtual void subscribe() {
   } catch (std::invalid_argument &ex) {
     NODELET_INFO_STREAM("Opening VideoCapture with provider: " << video_stream_provider);
     cap->open(video_stream_provider);
+    
+    if(!cap->isOpened() && video_stream_provider_type == "rtsp_stream")
+    {
+      int maxAttempts = 20;
+      int attempts = 0;
+      bool isOpened = false;
+      do 
+      {
+        ros::Duration(5).sleep();
+        isOpened = cap->open(video_stream_provider);
+        if(!isOpened)
+          NODELET_WARN_STREAM("Failed to open video stream provider: " << video_stream_provider << ". Attempting to open again in 5 second.");
+        else
+          NODELET_INFO_STREAM("Opened video stream provider: " << video_stream_provider);
+        
+        attempts++;
+      } while(!isOpened && attempts < maxAttempts);
+    }
+    
     if(video_stream_provider_type == "videofile" )
       {
         // We can only check the number of frames when we actually open the video file
