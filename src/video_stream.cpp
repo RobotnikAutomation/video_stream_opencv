@@ -317,7 +317,8 @@ virtual void unsubscribe() {
   ROS_DEBUG("Unsubscribe");
   publish_timer.stop();
   capture_thread_running = false;
-  capture_thread.join();
+  if (capture_thread.joinable() == true)
+    capture_thread.join();
   cap.reset();
 }
 
